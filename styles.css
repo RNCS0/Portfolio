@@ -58,7 +58,7 @@ header {
     gap: 5rem;
     list-style: none;
     position: absolute;
-    left: 40%;
+    left: 38%;
     transform: translateX(-50%);
     transform: translateY(-50%);
   }
