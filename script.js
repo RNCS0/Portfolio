@@ -86,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+    modal.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+    }, {passive: false});
 });
 
 document.addEventListener('keydown', (e) => {
@@ -256,26 +259,66 @@ function autoScroll() {
 
 function initCarousels() {
     cloneCarouselItems();
-    scrollIntervalId = setInterval(autoScroll, 20);
+    
+    function autoScroll() {
+        carousels.forEach(carousel => {
+            if (!carousel.matches(':hover')) {
+                let scrollPosition = parseFloat(carousel.dataset.scrollPos) || 0;
+                const scrollWidth = carousel.scrollWidth / 2;
+                const itemWidth = carousel.querySelector('.work-item').offsetWidth;
+                const maxScroll = scrollWidth - itemWidth;
+                
+                scrollPosition += 1;
+                
+                if (scrollPosition >= maxScroll) {
+                    scrollPosition = 0;
+                    carousel.style.transition = 'none';
+                    carousel.style.transform = `translateX(0)`;
+                    // Force reflow
+                    void carousel.offsetWidth;
+                }
+                
+                carousel.style.transform = `translateX(-${scrollPosition}px)`;
+                carousel.dataset.scrollPos = scrollPosition;
+                
+                // Only add transition after reset
+                if (scrollPosition > 0) {
+                    carousel.style.transition = 'transform 0.5s ease';
+                }
+            }
+        });
+        requestAnimationFrame(autoScroll);
+    }
+    
+    requestAnimationFrame(autoScroll);
+    
     carousels.forEach(carousel => {
         const images = carousel.querySelectorAll('img');
+        let isTouching = false;
         
         carousel.addEventListener('mouseenter', () => {
-            clearInterval(scrollIntervalId);
+            isTouching = true;
         });
         
         carousel.addEventListener('mouseleave', () => {
-            scrollIntervalId = setInterval(autoScroll, 20);
+            isTouching = false;
         });
         
-        // Also pause when hovering over individual images
+        carousel.addEventListener('touchstart', () => {
+            isTouching = true;
+        }, {passive: true});
+        
+        carousel.addEventListener('touchend', () => {
+            isTouching = false;
+        }, {passive: true});
+        
         images.forEach(img => {
             img.addEventListener('mouseenter', () => {
-                clearInterval(scrollIntervalId);
+                isTouching = true;
             });
             
             img.addEventListener('mouseleave', () => {
-                scrollIntervalId = setInterval(autoScroll, 20);
+                isTouching = false;
             });
         });
     });
@@ -333,35 +376,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+//Mouse Circle
 document.addEventListener("DOMContentLoaded", () => {
-    const cursor = document.createElement("div");
-    cursor.classList.add("custom-cursor");
-    document.body.appendChild(cursor);
+    if (!('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+        const cursor = document.createElement("div");
+        cursor.classList.add("custom-cursor");
+        document.body.appendChild(cursor);
 
-    document.addEventListener("mousemove", (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        cursor.style.left = `${mouseX}px`;
-        cursor.style.top = `${mouseY}px`;
-    });
-
-
-    document.querySelectorAll(".work-item, a, button, h1, .resume-item, .skills-list").forEach(element => {
-        element.addEventListener("mouseenter", () => {
-            cursor.style.opacity = "0.2";
-            cursor.style.height = "180px";
-            cursor.style.width = "180px";
+        document.addEventListener("mousemove", (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
         });
-        element.addEventListener("mouseleave", () => {
-            cursor.style.opacity = "1";
-            cursor.style.height = "80px";
-            cursor.style.width = "80px";
+
+        document.querySelectorAll(".work-item, a, button, h1, .resume-item, .skills-list").forEach(element => {
+            element.addEventListener("mouseenter", () => {
+                cursor.style.opacity = "0.2";
+                cursor.style.height = "180px";
+                cursor.style.width = "180px";
+            });
+            element.addEventListener("mouseleave", () => {
+                cursor.style.opacity = "1";
+                cursor.style.height = "80px";
+                cursor.style.width = "80px";
+            });
         });
-    });
+    }
 });
 
 
-// Touch support for carousels
+// Responsive Carousel
 carousels.forEach(carousel => {
     let touchStartX = 0;
     

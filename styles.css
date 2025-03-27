@@ -55,13 +55,13 @@ header {
   
   .centered-nav {
     display: flex;
-    gap: 5rem;
+    gap: 1rem;
     list-style: none;
-    position: absolute;
-    left: 38%;
-    transform: translateX(-50%);
-    transform: translateY(-50%);
-  }
+    margin: 0 auto;
+    padding: 0;
+    justify-content: center;
+    width: 100%;
+}
 
 .logo-gradient {
     fill: url(#gradient);
@@ -114,11 +114,7 @@ main {
     }
     
     .centered-nav {
-      position: static;
-      transform: none;
-      justify-content: center;
-      width: 100%;
-      padding: 0;
+        gap: 3rem;
     }
     
     .datetime {
@@ -128,7 +124,7 @@ main {
 
 /* Style the title */
 h1 {
-    font-size: clamp(20rem, 12vw, 8rem);
+    font-size: clamp(4rem, 12vw, 8rem);
     font-weight: 700;
     margin-bottom: 1rem;
     line-height: 1.1;
@@ -380,8 +376,8 @@ footer {
         gap: 1rem;
         padding: 1rem;
     }
-    h1{
-        font-size: clamp(12rem, 12vw, 8rem);
+    h1 {
+        font-size: clamp(3rem, 15vw, 6rem); 
     }
     nav ul {
         gap: 1rem;
@@ -411,7 +407,8 @@ footer {
     }
 
     .work-item {
-        flex: 0 0 300px;
+        flex: 0 0 80vw;
+        margin: 1rem;
     }
 }
 
