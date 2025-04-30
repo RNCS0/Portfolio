@@ -152,18 +152,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         workItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                item.classList.add('active');
-                
-                setTimeout(() => {
-                    item.classList.remove('active');
-                }, 300);
-                
-                console.log(`Clicked on ${item.querySelector('.work-title').textContent}`);
+                item.addEventListener('click', (e) => {
+                    if (isMobile && item.getAttribute('data-video-src')) {
+                        e.preventDefault();
+                        item.classList.add('active');
+                        setTimeout(() => {
+                            item.classList.remove('active');
+                        }, 300);
+                        console.log(`Clicked on ${item.querySelector('.work-title').textContent}`);
+                    }
+                });
             });
-        });
     }
 });
   
