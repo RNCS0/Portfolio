@@ -152,17 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         workItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    if (isMobile && item.getAttribute('data-video-src')) {
-                        e.preventDefault();
-                        item.classList.add('active');
-                        setTimeout(() => {
-                            item.classList.remove('active');
-                        }, 300);
-                        console.log(`Clicked on ${item.querySelector('.work-title').textContent}`);
-                    }
-                });
+            item.replaceWith(item.cloneNode(true));
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', (e) => {
+                if (!item.getAttribute('href') || item.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    item.classList.add('active');
+                    setTimeout(() => {
+                        item.classList.remove('active');
+                    }, 300);
+                }
             });
+        });
     }
 });
   
