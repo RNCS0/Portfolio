@@ -152,23 +152,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         workItems.forEach(item => {
+            item.replaceWith(item.cloneNode(true));
+            item.style.cursor = 'pointer';
             item.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                item.classList.add('active');
-                
-                setTimeout(() => {
-                    item.classList.remove('active');
-                }, 300);
-                
-                console.log(`Clicked on ${item.querySelector('.work-title').textContent}`);
+                if (!item.getAttribute('href') || item.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    item.classList.add('active');
+                    setTimeout(() => {
+                        item.classList.remove('active');
+                    }, 300);
+                }
             });
         });
     }
 });
   
 // ================================
-// Gallery Lightbox Functionality
+// Gallery Lightbox Functionality (Updated for Mobile Swipe)
 // ================================
 document.addEventListener('DOMContentLoaded', () => {
     const lightbox = document.getElementById('modal');
@@ -176,6 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeButton = document.querySelector('.modal-close');
     const galleryItems = document.querySelectorAll('.gallery-img');
     let currentIndex = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
     
     const prevButton = document.createElement('button');
     prevButton.className = 'modal-nav modal-prev';
@@ -208,6 +210,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    lightboxImage.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    
+    lightboxImage.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {passive: true});
+    
+    function handleSwipe() {
+        const threshold = 50;
+        
+        if (touchEndX < touchStartX - threshold) {
+            navigate(1);
+        } else if (touchEndX > touchStartX + threshold) {
+            navigate(-1);
+        }
+    }
+    
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
         
@@ -234,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateLightboxImage() {
         const activeImage = galleryItems[currentIndex];
         lightboxImage.src = activeImage.src;
+        lightboxImage.alt = activeImage.alt;
     }
     
     function navigate(direction) {
@@ -246,6 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         updateLightboxImage();
+        
+        lightboxImage.classList.add('swipe-animation');
+        setTimeout(() => {
+            lightboxImage.classList.remove('swipe-animation');
+        }, 300);
     }
 });
   

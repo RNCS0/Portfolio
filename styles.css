@@ -722,6 +722,38 @@ footer {
     right: 20px;
 }
 
+.modal-image {
+    transition: transform 0.3s ease;
+    touch-action: pan-y;
+}
+
+.modal-image.swipe-animation {
+    animation: swipe 0.3s ease;
+}
+
+@keyframes swipe {
+    0% { transform: translateX(0) scale(0.95); }
+    50% { transform: translateX(20px) scale(0.95); opacity: 0.7; }
+    100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .modal-nav {
+        display: none; 
+    }
+    
+    .modal-image {
+        width: 100%;
+        height: auto;
+        max-height: 70vh;
+        cursor: grab;
+    }
+    
+    .modal-image:active {
+        cursor: grabbing;
+    }
+}
+
 
 @media (max-width: 768px) {
     .modal-nav {
