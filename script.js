@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.top = `${e.clientY}px`;
         });
 
-        document.querySelectorAll(".work-item, a, button, h1, .resume-item, .skills-list").forEach(element => {
+        document.querySelectorAll(".work-item, a, button, h1, .resume-item, .skills-list > li").forEach(element => {
             element.addEventListener('mouseenter', () => {
                 cursor.style.opacity = "0.2";
                 cursor.style.height = "180px";
@@ -276,9 +276,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
   
-  
-  
-
-
-
 lucide.createIcons();
+
+// ================================
+// CV Download Button
+// ================================
+document.addEventListener('DOMContentLoaded', () => {
+    const downloadButton = document.getElementById('download-cv');
+    
+    if (downloadButton) {
+        downloadButton.addEventListener('click', () => {
+            // Create a temporary link element
+            const link = document.createElement('a');
+            
+            // Replace this with the actual path to your CV file
+            link.href = 'files/Salcedo_CV.pdf'; // Change this to your actual CV file path
+            link.download = 'RNCS-CV.pdf'; // The filename users will see
+            
+            // Append to body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Optional: Add a download confirmation animation
+            const originalText = downloadButton.innerHTML;
+            downloadButton.innerHTML = '<i data-lucide="check"></i> Downloaded!';
+            downloadButton.style.background = 'linear-gradient(135deg, #00C851 0%, #007E33 100%)';
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                downloadButton.innerHTML = originalText;
+                downloadButton.style.background = 'linear-gradient(135deg, #6C3BAA 0%, #0071e3 100%)';
+                lucide.createIcons(); // Recreate icons
+            }, 2000);
+        });
+    }
+});
